@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: myadminlite
+  name: myadminlite
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myadminlite
+  template:
+    metadata:
+      labels:
+        app: myadminlite
+    spec:
+      imagePullSecrets:
+        - name: docker-harbor-registry
+      containers:
+      - image: 192.168.153.102/myweb/myadmin-lite-prod:__VERSION__
+        name: nginx
+        resources: {}
+
+
+
+---
+
+
+kind: Service
+metadata:
+  labels:
+    app: myadminlite
+  name: myadminlite
+spec:
+  ports:
+  - port: 8010
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: myadminlite
+  type: NodePort
